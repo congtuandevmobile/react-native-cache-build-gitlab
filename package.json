@@ -1,6 +1,6 @@
 {
   "name": "@congtuandevmobile/react-native-cache-build-gitlab",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "module": "dist/index.js",
   "type": "module",
   "types": "dist/index.d.ts",
@@ -13,7 +13,6 @@
     "build": "bun tsc -p tsconfig.json",
     "publish-package": "bun npm publish"
   },
-  "private": true,
   "author": "Nguyễn Công Tuấn",
   "homepage": "https://github.com/congtuandevmobile",
   "license": "MIT",
