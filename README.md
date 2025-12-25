@@ -24,7 +24,7 @@ In your `rock.config.mjs`:
 ```javascript
 import { platformIOS } from "@rock-js/platform-ios";
 import { platformAndroid } from "@rock-js/platform-android";
-import { providerGitLab } from "@myvng/rockjs-provider-gitlab";
+import { providerGitLab } from "@congtuandevmobile/react-native-cache-build-gitlab";
 import { pluginMetro } from "@rock-js/plugin-metro";
 
 export default {
