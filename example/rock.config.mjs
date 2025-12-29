@@ -13,8 +13,6 @@ export default {
         packageName: "mobile-artifacts",
         baseUrl: "https://your-gitlab-instance.com",
         projectId: 1234,
-        token: process.env.CI_JOB_TOKEN,
-        tokenHeader: process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN",
     }),
     fingerprint: {
         ignorePaths: [
