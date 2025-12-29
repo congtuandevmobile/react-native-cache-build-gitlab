@@ -3,7 +3,7 @@ import { RockError } from "@rock-js/tools";
 import { GitLabRepoDetails } from "./artifacts";
 
 export type DetectGitLabRepoInput = Partial<GitLabRepoDetails> & {
-    baseUrl?: string;
+    registryServer?: string;
     projectId?: number | string;
     token?: string;
     tokenHeader?: "JOB-TOKEN" | "PRIVATE-TOKEN";
@@ -12,7 +12,7 @@ export type DetectGitLabRepoInput = Partial<GitLabRepoDetails> & {
 export async function detectGitLabRepoDetails(
     override?: DetectGitLabRepoInput,
 ): Promise<GitLabRepoDetails> {
-    const baseUrl = override?.baseUrl!;
+    const registryServer = override?.registryServer!;
 
     const projectId = override?.projectId;
 
@@ -33,7 +33,7 @@ export async function detectGitLabRepoDetails(
         );
     }
     return {
-        baseUrl,
+        registryServer,
         projectId,
         token,
         tokenHeader,

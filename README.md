@@ -4,10 +4,14 @@ GitLab Generic Package provider for [RockJS](https://rockjs.dev) with single pac
 
 ## Features
 
-✅ **Single Package Storage**: All native builds (iOS & Android) stored in one package  
-✅ **Fingerprint-based Lookup**: Fast artifact retrieval by filename matching  
-✅ **CI/CD Ready**: Works seamlessly with GitLab CI  
-✅ **Cost Effective**: Reduces package registry clutter
+📦 **Single Package Storage**: All native builds (iOS & Android) stored in one package.
+
+🧾 **Fingerprint-based Lookup**: Fast artifact retrieval by filename matching.
+
+🤖️ **CI/CD Ready**: Works seamlessly with GitLab CI.
+
+🪙 **Cost Effective**: Reduces package registry clutter.
+
 
 ## Installation
 
@@ -15,6 +19,48 @@ GitLab Generic Package provider for [RockJS](https://rockjs.dev) with single pac
 npm install react-native-cache-build-gitlab
 # or
 yarn add react-native-cache-build-gitlab
+```
+
+**Important**
+> You must configure your project according to the [RockJS documentation](https://www.rockjs.dev/docs/cli/migrating-from-community-cli).
+
+## Before to use this provider, make sure you have:
+
+Create a GitLab Personal Access Token (PAT) and expose it locally as the environment variable **CI_JOB_TOKEN**.
+### **1.Create a Personal Access Token**
+* Go to **GitLab** → **Edit profile** → **Personal access tokens**.
+* Click **Add new token**.
+* Give the token a name and expiration date (recommended).
+* Select scopes you need (commonly: read_api, read_package_registry, write_package_registry).
+* Create the token and copy it now — GitLab shows it only once (**Note: You need copy it now because you won't be able to see it again**).
+
+![img.png](assets/example_PAT.png)
+
+### **2.Expose the token as an environment variable**
+
+**⚠️ Important:** The provider expects the environment variable name to be ***CI_JOB_TOKEN***.
+
+* #### Temporary (current shell session only)
+```bash
+export CI_JOB_TOKEN=glt-abc123...
+````
+
+### Persist permanently (macOS with Zsh)
+* Open your Zsh config:
+```bash
+nano ~/.zshrc
+```
+* Add the line:
+```bash
+export CI_JOB_TOKEN=glt-abc123...
+```
+* Reload your shell:
+```bash
+source ~/.zshrc
+```
+* Verify:
+```bash
+echo $CI_JOB_TOKEN
 ```
 
 ## Usage
@@ -34,11 +80,13 @@ export default {
         android: platformAndroid(),
     },
     remoteCacheProvider: providerGitLab({
-        packageName: "mobile-artifacts",
-        baseUrl: "https://gitlab.example.com",
+        packageName: "mobile-artifacts", 
+        registryServer: "https://your-gitlab-instance.com",
         projectId: 1234,
-        token: process.env.CI_JOB_TOKEN,
-        tokenHeader: process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN",
+        /*
+        * token: default is process.env.CI_JOB_TOKEN
+        * tokenHeader: default is process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN"
+        * */
     }),
     fingerprint: {
         ignorePaths: [
@@ -56,11 +104,8 @@ export default {
 | Option        | Type                             | Description                                                                                     |
 | ------------- | -------------------------------- |-------------------------------------------------------------------------------------------------|
 | `packageName` | `string`                         | Package name in GitLab Generic Package Registry                                                 |
-| `baseUrl`     | `string`                         | GitLab instance URL                                                                             |
+| `registryServer`     | `string`                         | GitLab instance URL                                                                             |
 | `projectId`   | `number`                         | GitLab project ID                                                                               |
-| `token`       | `string`                         | GitLab personal access token (`CI_JOB_TOKEN` on CI), You have to export `CI_JOB_TOKEN` in local |
-|               |                                  |                                                                                                 |
-| `tokenHeader` | `"JOB-TOKEN" \| "PRIVATE-TOKEN"` | Token type                                                                                      |
 
 ## How It Works
 
@@ -93,12 +138,6 @@ build_android_cache:
     - CACHE_DIR="$(ls -1dt .rock/cache/remote-build/rock-android-* | head -n1)"
     - sh scripts/upload-cache-remote.sh "${CACHE_DIR}" rock-android-devDebug-{FP}.zip android
 ```
-
-## Differences from Official Provider
-
-The official `@rock-js/provider-gitlab` creates **one package per fingerprint**, which can clutter the package registry.
-
-This provider stores **all builds in one package** (version `1.0.4`), using filename-based lookup instead of version-based lookup.
 
 ## License
 

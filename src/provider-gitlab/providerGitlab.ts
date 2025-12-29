@@ -19,7 +19,7 @@ export class GitLabBuildCache implements RemoteBuildCache {
     repoDetails: GitLabRepoDetails | null = null;
 
     constructor(config?: {
-        baseUrl: string;
+        registryServer: string;
         projectId: number | string;
         token?: string;
         tokenHeader?: "JOB-TOKEN" | "PRIVATE-TOKEN";
@@ -38,7 +38,7 @@ export class GitLabBuildCache implements RemoteBuildCache {
             }
             this.repoDetails = {
                 packageName: config.packageName,
-                baseUrl: config.baseUrl,
+                registryServer: config.registryServer,
                 projectId: config.projectId,
                 token,
                 tokenHeader,
@@ -138,7 +138,7 @@ export class GitLabBuildCache implements RemoteBuildCache {
     async upload(): Promise<
         RemoteArtifact & {
         getResponse: (
-            buffer: Buffer | ((baseUrl: string) => Buffer),
+            buffer: Buffer | ((registryServer: string) => Buffer),
             contentType?: string | undefined,
         ) => Response;
     }
@@ -149,7 +149,7 @@ export class GitLabBuildCache implements RemoteBuildCache {
 
 export const providerGitLab =
     (options?: {
-        baseUrl: string;
+        registryServer: string;
         projectId: number;
         token?: string;
         tokenHeader?: "PRIVATE-TOKEN" | "JOB-TOKEN";

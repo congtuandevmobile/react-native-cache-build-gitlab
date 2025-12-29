@@ -8,7 +8,7 @@ import {
 } from "@rock-js/tools";
 
 export type GitLabRepoDetails = {
-    baseUrl: string;
+    registryServer: string;
     projectId: number | string;
     token: string;
     tokenHeader: "PRIVATE-TOKEN" | "JOB-TOKEN";
@@ -67,7 +67,7 @@ async function httpJson<T>(url: string, repo: GitLabRepoDetails): Promise<T> {
         }
         if (res.status === 404) {
             throw new RockError(
-                `GitLab 404.\nCheck baseUrl/projectId/packageName or token perms.\nURL: ${colorLink(url)}`,
+                `GitLab 404.\nCheck registryServer/projectId/packageName or token perms.\nURL: ${colorLink(url)}`,
             );
         }
         throw new RockError(`GitLab request failed: ${info}`);
@@ -81,8 +81,8 @@ function genericDownloadUrl(
     version: string,
     fileName: string,
 ) {
-    const {baseUrl, projectId} = repo;
-    return `${baseUrl}/api/v4/projects/${encodeURIComponent(
+    const {registryServer, projectId} = repo;
+    return `${registryServer}/api/v4/projects/${encodeURIComponent(
         String(projectId),
     )}/packages/generic/${encodeURIComponent(packageName)}/${encodeURIComponent(version)}/${encodeURIComponent(
         fileName,
@@ -107,7 +107,7 @@ export async function fetchGitLabArtifactsByName(
     const packages: GitLabPackage[] = [];
     while (true) {
         const url =
-            `${repo.baseUrl}/api/v4/projects/${encodeURIComponent(String(repo.projectId))}/packages` +
+            `${repo.registryServer}/api/v4/projects/${encodeURIComponent(String(repo.projectId))}/packages` +
             `?package_type=generic&per_page=${perPage}&page=${page}` +
             (name ? `&package_name=${encodeURIComponent(name)}` : "");
         const chunk = await httpJson<GitLabPackage[]>(url, repo);
@@ -125,7 +125,7 @@ export async function fetchGitLabArtifactsByName(
         let fPage = 1;
         while (true) {
             const filesUrl =
-                `${repo.baseUrl}/api/v4/projects/${encodeURIComponent(String(repo.projectId))}` +
+                `${repo.registryServer}/api/v4/projects/${encodeURIComponent(String(repo.projectId))}` +
                 `/packages/${pkg.id}/package_files?per_page=${PAGE_SIZE}&page=${fPage}`;
             const files = await httpJson<GitLabPackageFile[]>(filesUrl, repo);
             if (!files.length) break;
@@ -166,7 +166,7 @@ export async function deleteGitLabArtifacts(
     const deleted: RemoteArtifact[] = [];
     try {
         for (const artifact of artifacts) {
-            const url = `${repo.baseUrl}/api/v4/projects/${encodeURIComponent(
+            const url = `${repo.registryServer}/api/v4/projects/${encodeURIComponent(
                 String(repo.projectId),
             )}/packages/${artifact.packageId}/package_files/${artifact.fileId}`;
 
