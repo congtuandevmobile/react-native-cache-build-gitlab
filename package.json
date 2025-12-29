@@ -1,6 +1,6 @@
 {
   "name": "react-native-cache-build-gitlab",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "dist/index.js",
   "type": "module",
   "types": "dist/index.d.ts",
