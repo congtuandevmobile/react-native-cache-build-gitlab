@@ -113,6 +113,8 @@ export default {
 
 All builds are uploaded to a **single package** with version `1.0.0` (Can change version if needed) at *Package Registry*.:
 
+>You can use the script **upload-cache-remote.sh** from **example** to upload build cache to GitLab Package Registry.
+
 ```
 mobile-artifacts@1.0.0/
   ├── rock-ios-simulator-Debug-{fingerprint}.zip
