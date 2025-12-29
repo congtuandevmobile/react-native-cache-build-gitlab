@@ -57,7 +57,7 @@ export default {
 
 ### Upload (CI)
 
-All builds are uploaded to a **single package** with version `1.0.0`:
+All builds are uploaded to a **single package** with version `1.0.0` (Can change version if needed) at *Package Registry*.:
 
 ```
 mobile-artifacts@1.0.0/
@@ -89,7 +89,7 @@ build_android_cache:
 
 The official `@rock-js/provider-gitlab` creates **one package per fingerprint**, which can clutter the package registry.
 
-This provider stores **all builds in one package** (version `1.0.2`), using filename-based lookup instead of version-based lookup.
+This provider stores **all builds in one package** (version `1.0.4`), using filename-based lookup instead of version-based lookup.
 
 ## License
 
