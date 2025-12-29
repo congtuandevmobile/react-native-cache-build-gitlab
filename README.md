@@ -27,7 +27,7 @@ yarn add react-native-cache-build-gitlab
 ## Before to use this provider, make sure you have:
 
 Create a GitLab Personal Access Token (PAT) and expose it locally as the environment variable **CI_JOB_TOKEN**.
-### **1.Create a Personal Access Token**
+### **1. Create a Personal Access Token**
 * Go to **GitLab** → **Edit profile** → **Personal access tokens**.
 * Click **Add new token**.
 * Give the token a name and expiration date (recommended).
@@ -36,7 +36,7 @@ Create a GitLab Personal Access Token (PAT) and expose it locally as the environ
 
 ![img.png](assets/example_PAT.png)
 
-### **2.Expose the token as an environment variable**
+### **2. Expose the token as an environment variable**
 
 **⚠️ Important:** The provider expects the environment variable name to be ***CI_JOB_TOKEN***.
 
