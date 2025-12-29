@@ -11,7 +11,7 @@ export default {
     },
     remoteCacheProvider: providerGitLab({
         packageName: "mobile-artifacts",
-        baseUrl: "https://your-gitlab-instance.com",
+        registryServer: "https://your-gitlab-instance.com",
         projectId: 1234,
     }),
     fingerprint: {

@@ -2,7 +2,7 @@
 PROJECT_ID=1234
 PACKAGE_NAME="mobile-artifacts"
 PACKAGE_VERSION="1.0.0"
-BASE_URL="https://domain-gitlab.com.vn"
+REGISTRY_SERVER="https://domain-gitlab.com.vn"
 
 FILE_PATH="$1"
 FILE_UPLOAD_NAME="$2"
@@ -40,7 +40,7 @@ if [[ ! -f "$UPLOAD_FILE" ]]; then
   exit 1
 fi
 
-UPLOAD_URL="${BASE_URL}/api/v4/projects/${PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${FILE_UPLOAD_NAME}"
+UPLOAD_URL="${REGISTRY_SERVER}/api/v4/projects/${PROJECT_ID}/packages/generic/${PACKAGE_NAME}/${PACKAGE_VERSION}/${FILE_UPLOAD_NAME}"
 
 echo "→ Uploading"
 echo "  Project : $PROJECT_ID"
