@@ -21,7 +21,7 @@ npm install react-native-cache-build-gitlab
 yarn add react-native-cache-build-gitlab
 ```
 
-**Important**
+## ⚠️ Important
 > You must configure your project according to the [RockJS documentation](https://www.rockjs.dev/docs/cli/migrating-from-community-cli).
 
 ## Before to use this provider, make sure you have:
