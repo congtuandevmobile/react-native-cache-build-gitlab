@@ -1,0 +1,10 @@
+variables:
+  CACHE_BUILD: /\[cache build]/
+
+stages:
+  - test
+  - build
+
+include:
+  - .gitlab-ci/cache-build.yml
+  - .gitlab-ci/test.yml

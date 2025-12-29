@@ -1,0 +1,23 @@
+include: "/.gitlab-ci/global.yml"
+
+#TODO: ====CI-UNITS-TESTING====
+unit_test:
+  stage: test
+  tags:
+    - react-native-testing #Your runner tag for testing jobs
+  rules: !reference [.rules, test]
+  script:
+    # Your script to run unit tests
+    - bun run test
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - node_modules
+    policy: pull
+  artifacts:
+    paths:
+      - example-unit-test.xml
+    reports:
+      junit: example-unit-test.xml
+    expire_in: 12 hours
+

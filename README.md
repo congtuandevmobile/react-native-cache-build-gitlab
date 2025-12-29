@@ -80,7 +80,7 @@ When running:
 build_android_cache:
   stage: build
   script:
-    - npx rock build:android --variant=devDebug
+    - bun run build:android --variant=devDebug
     - CACHE_DIR="$(ls -1dt .rock/cache/remote-build/rock-android-* | head -n1)"
     - sh scripts/upload-cache-remote.sh "${CACHE_DIR}" rock-android-devDebug-{FP}.zip android
 ```

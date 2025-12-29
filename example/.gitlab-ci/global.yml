@@ -1,0 +1,63 @@
+.ios_build_cache_steps:
+  stage: build
+  tags:
+    - react-native-cache-ios #Your runner tag for iOS caching jobs
+  needs: [unit-test]
+  dependencies:
+    - unit-test
+  before_script:
+    # You can prepare environment variables or install dependencies here (e.g., fastlane,...)
+
+    # Environment
+    - |
+      nvm install node
+      nvm use node
+      echo "Using Node.js: $(node --version)"
+      which node || { echo "node missing"; exit 1; }
+      which npx  || { echo "npx missing";  exit 1; }
+
+      export NODE_BINARY="$(command -v node)"
+      export CONFIG_CMD="dummy-workaround-value"
+
+    #ios installation
+    - cd ios/
+    - bundle exec pod deintegrate
+    - bundle exec pod install --verbose --repo-update
+    - cd ..
+
+.android_build_cache_steps:
+  stage: build
+  tags:
+    - react-native-cache-android #Your runner tag for Android caching jobs
+  needs: [unit-test]
+  dependencies:
+    - unit-test
+  before_script:
+    # You can prepare environment variables or install dependencies here (e.g., fastlane,...)
+
+    # Environment
+    - |
+      nvm install node
+      nvm use node
+      echo "Using Node.js: $(node --version)"
+      which node || { echo "node missing"; exit 1; }
+      which npx  || { echo "npx missing";  exit 1; }
+
+      export NODE_BINARY="$(command -v node)"
+      export CONFIG_CMD="dummy-workaround-value"
+
+    - bun run android:clean-gradle
+
+.cache_build_rule: &cache_build_rule |
+  $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_MESSAGE =~ $CACHE_BUILD && $CI_COMMIT_REF_NAME == $CI_COMMIT_BRANCH
+
+# jobs rule
+.rules:
+  test:
+    - if: *cache_build_rule
+    - when: never
+  cache_build:
+    - if: *cache_build_rule
+    - when: never
+
+

@@ -1,0 +1,65 @@
+include: "/.gitlab-ci/global.yml"
+
+build_ios_cache:
+  extends: .ios_build_cache_steps
+  variables:
+    NAME_PREFIX: "rock-ios-simulator-Debug"
+  rules: !reference [.rules, cache_build]
+  script:
+    - |
+      RCT_NO_LAUNCH_PACKAGER=true bun run rock:build-ios \
+        --configuration Debug \
+        --destination simulator
+      
+      CACHE_DIR="$(ls -1dt .rock/cache/remote-build/${NAME_PREFIX}-* | head -n1 || true)"
+      
+      if [[ -z "${CACHE_DIR}" || ! -d "${CACHE_DIR}" ]]; then
+        echo "No cache output under .rock/cache/remote-build/${NAME_PREFIX}-*"
+        exit 1
+      fi
+      echo "CACHE_DIR=${CACHE_DIR}"
+
+      FP="${CACHE_DIR##*-}"
+      echo "Fingerprint: ${FP}"
+
+      if ! compgen -G "${CACHE_DIR}"/*.app > /dev/null; then
+        echo "No .app found in ${CACHE_DIR}"
+        ls -la "${CACHE_DIR}" || true
+        exit 1
+      fi
+
+      FILE_UPLOAD_NAME="${NAME_PREFIX}-${FP}.zip"
+      echo "FILE_UPLOAD_NAME=${FILE_UPLOAD_NAME}"
+
+      sh scripts/upload-cache-remote.sh "${CACHE_DIR}" "${FILE_UPLOAD_NAME}" ios
+
+build_android_cache:
+  extends: .android_build_cache_steps
+  variables:
+    NAME_PREFIX: "rock-android-devDebug"
+  rules: !reference [.rules, cache_build]
+  script:
+    - |
+      bun run rock:build-android
+      
+      CACHE_DIR="$(ls -1dt .rock/cache/remote-build/${NAME_PREFIX}-* | head -n1 || true)"
+      
+      if [[ -z "${CACHE_DIR}" || ! -d "${CACHE_DIR}" ]]; then
+        echo "No cache output under .rock/cache/remote-build/${NAME_PREFIX}-*"
+        exit 1
+      fi
+      echo "CACHE_DIR=${CACHE_DIR}"
+
+      FP="${CACHE_DIR##*-}"
+      echo "Fingerprint: ${FP}"
+
+      if ! compgen -G "${CACHE_DIR}"/*.apk > /dev/null; then
+        echo "No .apk found in ${CACHE_DIR}"
+        ls -la "${CACHE_DIR}" || true
+        exit 1
+      fi
+
+      FILE_UPLOAD_NAME="${NAME_PREFIX}-${FP}.zip"
+      echo "FILE_UPLOAD_NAME=${FILE_UPLOAD_NAME}"
+
+      sh scripts/upload-cache-remote.sh "${CACHE_DIR}" "${FILE_UPLOAD_NAME}" android
