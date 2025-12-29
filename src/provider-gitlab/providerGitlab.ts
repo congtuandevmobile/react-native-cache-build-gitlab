@@ -21,12 +21,15 @@ export class GitLabBuildCache implements RemoteBuildCache {
     constructor(config?: {
         baseUrl: string;
         projectId: number | string;
-        token: string;
-        tokenHeader: "JOB-TOKEN" | "PRIVATE-TOKEN";
+        token?: string;
+        tokenHeader?: "JOB-TOKEN" | "PRIVATE-TOKEN";
         packageName: string;
     }) {
         if (config) {
-            const token = process.env.CI_JOB_TOKEN;
+
+            const token = config.token ?? process.env.CI_JOB_TOKEN
+
+            const tokenHeader = config.tokenHeader ?? (process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN");
 
             if (!token) {
                 throw new Error(
@@ -37,8 +40,8 @@ export class GitLabBuildCache implements RemoteBuildCache {
                 packageName: config.packageName,
                 baseUrl: config.baseUrl,
                 projectId: config.projectId,
-                token: config.token,
-                tokenHeader: config.tokenHeader,
+                token,
+                tokenHeader,
             };
         }
     }
@@ -81,8 +84,6 @@ export class GitLabBuildCache implements RemoteBuildCache {
         artifactName: string;
     }): Promise<Response> {
         const repo = await this.getRepoDetails();
-
-        // const { name, version } = parseName(artifactName);
 
         const {fingerprint} = parseRockArtifact(artifactName);
 
@@ -150,8 +151,8 @@ export const providerGitLab =
     (options?: {
         baseUrl: string;
         projectId: number;
-        token: string;
-        tokenHeader: "PRIVATE-TOKEN" | "JOB-TOKEN";
+        token?: string;
+        tokenHeader?: "PRIVATE-TOKEN" | "JOB-TOKEN";
         packageName: string;
     }) =>
         (): RemoteBuildCache =>
