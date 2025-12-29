@@ -21,37 +21,46 @@ yarn add react-native-cache-build-gitlab
 
 In your `rock.config.mjs`:
 
-```javascript
-import { platformIOS } from "@rock-js/platform-ios";
-import { platformAndroid } from "@rock-js/platform-android";
-import { providerGitLab } from "react-native-cache-build-gitlab";
-import { pluginMetro } from "@rock-js/plugin-metro";
+```ts
+import {platformIOS} from "@rock-js/platform-ios";
+import {platformAndroid} from "@rock-js/platform-android";
+import {providerGitLab} from "react-native-cache-build-gitlab";
+import {pluginMetro} from "@rock-js/plugin-metro";
 
 export default {
-  bundler: pluginMetro(),
-  platforms: {
-    ios: platformIOS(),
-    android: platformAndroid(),
-  },
-  remoteCacheProvider: providerGitLab({
-    packageName: "mobile-artifacts",
-    baseUrl: "https://gitlab.example.com",
-    projectId: 1234,
-    token: process.env.CI_JOB_TOKEN,
-    tokenHeader: process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN",
-  }),
+    bundler: pluginMetro(),
+    platforms: {
+        ios: platformIOS(),
+        android: platformAndroid(),
+    },
+    remoteCacheProvider: providerGitLab({
+        packageName: "mobile-artifacts",
+        baseUrl: "https://gitlab.example.com",
+        projectId: 1234,
+        token: process.env.CI_JOB_TOKEN,
+        tokenHeader: process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN",
+    }),
+    fingerprint: {
+        ignorePaths: [
+            "ios/Podfile.lock",
+            "ios/**/xcuserdata",
+            "ios/**/project.pbxproj",
+            // Add more paths to ignore as needed
+        ],
+    },
 };
 ```
 
 ## Configuration
 
-| Option        | Type                             | Description                                     |
-| ------------- | -------------------------------- | ----------------------------------------------- |
-| `packageName` | `string`                         | Package name in GitLab Generic Package Registry |
-| `baseUrl`     | `string`                         | GitLab instance URL                             |
-| `projectId`   | `number`                         | GitLab project ID                               |
-| `token`       | `string`                         | GitLab access token (`CI_JOB_TOKEN` on CI)      |
-| `tokenHeader` | `"JOB-TOKEN" \| "PRIVATE-TOKEN"` | Token type                                      |
+| Option        | Type                             | Description                                                                                     |
+| ------------- | -------------------------------- |-------------------------------------------------------------------------------------------------|
+| `packageName` | `string`                         | Package name in GitLab Generic Package Registry                                                 |
+| `baseUrl`     | `string`                         | GitLab instance URL                                                                             |
+| `projectId`   | `number`                         | GitLab project ID                                                                               |
+| `token`       | `string`                         | GitLab personal access token (`CI_JOB_TOKEN` on CI), You have to export `CI_JOB_TOKEN` in local |
+|               |                                  |                                                                                                 |
+| `tokenHeader` | `"JOB-TOKEN" \| "PRIVATE-TOKEN"` | Token type                                                                                      |
 
 ## How It Works
 
