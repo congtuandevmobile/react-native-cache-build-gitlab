@@ -1,6 +1,6 @@
 {
-  "name": "@congtuandevmobile/react-native-cache-build-gitlab",
-  "version": "0.0.1",
+  "name": "react-native-cache-build-gitlab",
+  "version": "1.0.0",
   "module": "dist/index.js",
   "type": "module",
   "types": "dist/index.d.ts",
