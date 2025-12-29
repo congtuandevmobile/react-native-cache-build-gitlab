@@ -11,7 +11,7 @@
   "scripts": {
     "clean": "rm -rf dist && rm -rf node_modules",
     "build": "bun tsc -p tsconfig.json",
-    "publish-package": "bun npm publish"
+    "publish-package": "npm publish"
   },
   "author": "Nguyễn Công Tuấn",
   "homepage": "https://github.com/congtuandevmobile",
