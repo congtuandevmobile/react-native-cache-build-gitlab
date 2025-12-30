@@ -4,13 +4,13 @@ GitLab Generic Package provider for [RockJS](https://rockjs.dev) with single pac
 
 ## Features
 
-📦 **Single Package Storage**: All native builds (iOS & Android) stored in one package.
+📦 **Single Package Storage**: Stores all native builds (iOS & Android) in a single GitLab Generic Package.
 
 🧾 **Fingerprint-based Lookup**: Fast artifact retrieval by filename matching.
 
 🤖️ **CI/CD Ready**: Works seamlessly with GitLab CI.
 
-🪙 **Cost Effective**: Reduces package registry clutter.
+🪙 **Cost Effective**: Reduces package registry clutter by grouping artifacts.
 
 
 ## Installation
@@ -21,47 +21,35 @@ npm install react-native-cache-build-gitlab
 yarn add react-native-cache-build-gitlab
 ```
 
-## ⚠️ Important
-> You must configure your project according to the [RockJS documentation](https://www.rockjs.dev/docs/cli/migrating-from-community-cli).
+## ⚠️ Prerequisites & Configuration
+**Important:** You must configure your project according to the [RockJS documentation](https://www.rockjs.dev/docs/cli/migrating-from-community-cli).
 
-## Before to use this provider, make sure you have:
+Before using this provider, you need to set up authentication. This provider uses `CI_JOB_TOKEN` as the default environment variable for authentication.
 
-Create a GitLab Personal Access Token (PAT) and expose it locally as the environment variable **CI_JOB_TOKEN**.
 ### **1. Create a Personal Access Token**
 * Go to **GitLab** → **Edit profile** → **Personal access tokens**.
 * Click **Add new token**.
 * Give the token a name and expiration date (recommended).
-* Select scopes you need (commonly: read_api, read_package_registry, write_package_registry).
-* Create the token and copy it now — GitLab shows it only once (**Note: You need copy it now because you won't be able to see it again**).
+* Select scopes you need (commonly: `read_api`, `read_repository`, `write_repository`).
+* Create the token and copy it now — GitLab shows it only once.
 
 ![img.png](assets/example_PAT.png)
 
 ### **2. Expose the token as an environment variable**
 
-**⚠️ Important:** The provider expects the environment variable name to be ***CI_JOB_TOKEN***.
+The provider expects the token in the `CI_JOB_TOKEN` environment variable
 
-* #### Temporary (current shell session only)
+#### Temporary (Current Shell)
 ```bash
 export CI_JOB_TOKEN=glt-abc123...
 ````
 
-### Persist permanently (macOS with Zsh)
-* Open your Zsh config:
+#### Permanent (macOS/Linux - Zsh):
 ```bash
-nano ~/.zshrc
-```
-* Add the line:
-```bash
-export CI_JOB_TOKEN=glt-abc123...
-```
-* Reload your shell:
-```bash
+echo 'export CI_JOB_TOKEN=glpat-abc123...' >> ~/.zshrc
 source ~/.zshrc
 ```
-* Verify:
-```bash
-echo $CI_JOB_TOKEN
-```
+**Note:** In GitLab CI pipelines, `CI_JOB_TOKEN` is automatically injected, so you don't need to configure it manually there.
 
 ## Usage
 
@@ -84,8 +72,8 @@ export default {
         registryServer: "https://your-gitlab-instance.com",
         projectId: 1234,
         /*
-        * token: default is process.env.CI_JOB_TOKEN
-        * tokenHeader: default is process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN"
+        * token: process.env.CI_JOB_TOKEN (default)
+        * tokenHeader: default is process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN" (default)
         * */
     }),
     fingerprint: {
@@ -101,23 +89,25 @@ export default {
 
 ## Configuration
 
-| Option        | Type                             | Description                                                                                     |
-| ------------- | -------------------------------- |-------------------------------------------------------------------------------------------------|
-| `packageName` | `string`                         | Package name in GitLab Generic Package Registry                                                 |
-| `registryServer`     | `string`                         | GitLab instance URL                                                                             |
-| `projectId`   | `number`                         | GitLab project ID                                                                               |
+| Option           | Type     | Description                                                          |
+|------------------|----------|----------------------------------------------------------------------|
+| `packageName`    | `string` | Package name in GitLab Generic Package Registry                      |
+| `registryServer` | `string` | GitLab instance URL                                                  |
+| `projectId`      | `number` | GitLab project ID                                                    |
+| `token`          | `string` | (Optional) Auth token. Defaults to `process.env.CI_JOB_TOKEN`        |
+| `tokenHeader`    | `string` | (Optional) Auth token header. Defaults to `process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN"`|
+
 
 ## How It Works
 
 ### Upload (CI)
-When trigger pipeline CI:
+When your CI pipeline runs, you can use a script to upload the build artifacts to the GitLab Package Registry. (See the `example` folder in the repository for the `upload-cache-remote.sh` script).
+
 ![img.png](assets/ci.png)
 
->You can use the script **upload-cache-remote.sh** from **example** to upload build cache to GitLab Package Registry.
+### Registry Structure 
 
-### Package Registry 
-
-All builds are uploaded to a **single package** with version `1.0.0` (Can change version in script upload if needed) at *Package Registry*:
+All builds are uploaded to a single package version (e.g., 1.0.0).
 
 ![img.png](assets/registry.png)
 
@@ -130,11 +120,11 @@ mobile-artifacts@1.0.0/
 
 ### Download (Local)
 
-When running:
+When you run `yarn rock:run-ios` or `yarn rock:run-android`:
 
-1. Calculate project fingerprint
-2. Search for file containing the fingerprint
-3. Download and extract
+1. Rock calculates the **project fingerprint**.
+2. The provider searches the GitLab Package for a file containing that fingerprint.
+3. If found, it downloads and extracts the artifact automatically.
 
 > Android:
 ![img.png](assets/run-android.png)
