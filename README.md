@@ -73,7 +73,7 @@ export default {
         projectId: 1234,
         /*
         * token: process.env.CI_JOB_TOKEN (default)
-        * tokenHeader: default is process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN" (default)
+        * tokenHeader: process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN" (default)
         * */
     }),
     fingerprint: {
