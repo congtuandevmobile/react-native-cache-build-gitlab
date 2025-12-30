@@ -110,10 +110,16 @@ export default {
 ## How It Works
 
 ### Upload (CI)
-
-All builds are uploaded to a **single package** with version `1.0.0` (Can change version if needed) at *Package Registry*.:
+When trigger pipeline CI:
+![img.png](assets/ci.png)
 
 >You can use the script **upload-cache-remote.sh** from **example** to upload build cache to GitLab Package Registry.
+
+### Package Registry 
+
+All builds are uploaded to a **single package** with version `1.0.0` (Can change version in script upload if needed) at *Package Registry*:
+
+![img.png](assets/registry.png)
 
 ```
 mobile-artifacts@1.0.0/
@@ -122,13 +128,19 @@ mobile-artifacts@1.0.0/
   └── ...
 ```
 
-### Download (Local/CI)
+### Download (Local)
 
 When running:
 
 1. Calculate project fingerprint
 2. Search for file containing the fingerprint
 3. Download and extract
+
+> Android:
+![img.png](assets/run-android.png)
+
+> iOS:
+![img.png](assets/run-ios.png)
 
 ## GitLab CI Example
 
