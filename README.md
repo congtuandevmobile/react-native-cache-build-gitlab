@@ -140,7 +140,7 @@ build_android_cache:
     - CACHE_DIR="$(ls -1dt .rock/cache/remote-build/rock-android-* | head -n1)"
     - sh scripts/upload-cache-remote.sh "${CACHE_DIR}" rock-android-devDebug-{FP}.zip android
 ```
-> ***You can see config gitlab CI in folder example***
+> ***You can refer to the CI gitlab config in folder example***
 
 ## License
 
