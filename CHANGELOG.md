@@ -1,3 +1,9 @@
+## v1.0.10
+
+## Fix
+
+- Fix missing dist folder in published package
+
 ## v1.0.9
 
 ## FIX
