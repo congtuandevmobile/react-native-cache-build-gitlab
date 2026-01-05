@@ -1,3 +1,9 @@
+## v1.0.9
+
+## FIX
+
+- [!] Invalid `Podfile` file: exit.
+
 ## v1.0.8
 
 ## Improvement
