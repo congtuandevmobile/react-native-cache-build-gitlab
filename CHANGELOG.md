@@ -1,5 +1,11 @@
+## v1.0.8
+
+## Improvement
+
+- Add repository field in package.json
+
 ## v1.0.7
 
 ## Improvement
 
-    - Release package workflow 
+- Release package workflow
