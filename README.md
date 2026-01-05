@@ -12,7 +12,6 @@ GitLab Generic Package provider for [RockJS](https://rockjs.dev) with single pac
 
 🪙 **Cost Effective**: Reduces package registry clutter by grouping artifacts.
 
-
 ## Installation
 
 ```bash
@@ -22,16 +21,18 @@ yarn add react-native-cache-build-gitlab
 ```
 
 ## ⚠️ Prerequisites & Configuration
+
 **Important:** You must configure your project according to the [RockJS documentation](https://www.rockjs.dev/docs/cli/migrating-from-community-cli).
 
 Before using this provider, you need to set up authentication. This provider uses `CI_JOB_TOKEN` as the default environment variable for authentication.
 
 ### **1. Create a Personal Access Token**
-* Go to **GitLab** → **Edit profile** → **Personal access tokens**.
-* Click **Add new token**.
-* Give the token a name and expiration date (recommended).
-* Select scopes you need (commonly: `read_api`, `read_repository`, `write_repository`).
-* Create the token and copy it now — GitLab shows it only once.
+
+- Go to **GitLab** → **Edit profile** → **Personal access tokens**.
+- Click **Add new token**.
+- Give the token a name and expiration date (recommended).
+- Select scopes you need (commonly: `read_api`, `read_repository`, `write_repository`).
+- Create the token and copy it now — GitLab shows it only once.
 
 ![img.png](assets/example_PAT.png)
 
@@ -40,15 +41,18 @@ Before using this provider, you need to set up authentication. This provider use
 The provider expects the token in the `CI_JOB_TOKEN` environment variable
 
 #### Temporary (Current Shell)
+
 ```bash
 export CI_JOB_TOKEN=glt-abc123...
-````
+```
 
 #### Permanent (macOS/Linux - Zsh):
+
 ```bash
-echo 'export CI_JOB_TOKEN=glpat-abc123...' >> ~/.zshrc
+echo 'export CI_JOB_TOKEN=glt-abc123...' >> ~/.zshrc
 source ~/.zshrc
 ```
+
 **Note:** In GitLab CI pipelines, `CI_JOB_TOKEN` is automatically injected, so you don't need to configure it manually there.
 
 ## Usage
@@ -56,56 +60,56 @@ source ~/.zshrc
 In your `rock.config.mjs`:
 
 ```ts
-import {platformIOS} from "@rock-js/platform-ios";
-import {platformAndroid} from "@rock-js/platform-android";
-import {providerGitLab} from "react-native-cache-build-gitlab";
-import {pluginMetro} from "@rock-js/plugin-metro";
+import { platformIOS } from "@rock-js/platform-ios";
+import { platformAndroid } from "@rock-js/platform-android";
+import { providerGitLab } from "react-native-cache-build-gitlab";
+import { pluginMetro } from "@rock-js/plugin-metro";
 
 export default {
-    bundler: pluginMetro(),
-    platforms: {
-        ios: platformIOS(),
-        android: platformAndroid(),
-    },
-    remoteCacheProvider: providerGitLab({
-        packageName: "mobile-artifacts", 
-        registryServer: "https://your-gitlab-instance.com",
-        projectId: 1234,
-        /*
-        * token: process.env.CI_JOB_TOKEN (default)
-        * tokenHeader: process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN" (default)
-        * */
-    }),
-    fingerprint: {
-        ignorePaths: [
-            "ios/Podfile.lock",
-            "ios/**/xcuserdata",
-            "ios/**/project.pbxproj",
-            // Add more paths to ignore as needed
-        ],
-    },
+  bundler: pluginMetro(),
+  platforms: {
+    ios: platformIOS(),
+    android: platformAndroid(),
+  },
+  remoteCacheProvider: providerGitLab({
+    packageName: "mobile-artifacts",
+    registryServer: "https://your-gitlab-instance.com",
+    projectId: 1234,
+    /*
+     * token: process.env.CI_JOB_TOKEN (default)
+     * tokenHeader: process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN" (default)
+     * */
+  }),
+  fingerprint: {
+    ignorePaths: [
+      "ios/Podfile.lock",
+      "ios/**/xcuserdata",
+      "ios/**/project.pbxproj",
+      // Add more paths to ignore as needed
+    ],
+  },
 };
 ```
 
 ## Configuration
 
-| Option           | Type     | Description                                                          |
-|------------------|----------|----------------------------------------------------------------------|
-| `packageName`    | `string` | Package name in GitLab Generic Package Registry                      |
-| `registryServer` | `string` | GitLab instance URL                                                  |
-| `projectId`      | `number` | GitLab project ID                                                    |
-| `token`          | `string` | (Optional) Auth token. Defaults to `process.env.CI_JOB_TOKEN`        |
-| `tokenHeader`    | `string` | (Optional) Auth token header. Defaults to `process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN"`|
-
+| Option           | Type     | Description                                                                                |
+| ---------------- | -------- | ------------------------------------------------------------------------------------------ |
+| `packageName`    | `string` | Package name in GitLab Generic Package Registry                                            |
+| `registryServer` | `string` | GitLab instance URL                                                                        |
+| `projectId`      | `number` | GitLab project ID                                                                          |
+| `token`          | `string` | (Optional) Auth token. Defaults to `process.env.CI_JOB_TOKEN`                              |
+| `tokenHeader`    | `string` | (Optional) Auth token header. Defaults to `process.env.CI ? "JOB-TOKEN" : "PRIVATE-TOKEN"` |
 
 ## How It Works
 
 ### Upload (CI)
+
 When your CI pipeline runs, you can use a script to upload the build artifacts to the GitLab Package Registry. (See the `example` folder in the repository for the `upload-cache-remote.sh` script).
 
 ![img.png](assets/ci.png)
 
-### Registry Structure 
+### Registry Structure
 
 All builds are uploaded to a single package version (e.g., 1.0.0).
 
@@ -120,17 +124,17 @@ mobile-artifacts@1.0.0/
 
 ### Download (Local)
 
-When you run `yarn rock:run-ios` or `yarn rock:run-android`:
+When you run `bun rock:run-ios` or `bun rock:run-android`:
 
 1. Rock calculates the **project fingerprint**.
 2. The provider searches the GitLab Package for a file containing that fingerprint.
 3. If found, it downloads and extracts the artifact automatically.
 
 > Android:
-![img.png](assets/run-android.png)
+> ![img.png](assets/run-android.png)
 
 > iOS:
-![img.png](assets/run-ios.png)
+> ![img.png](assets/run-ios.png)
 
 ## GitLab CI Example
 
@@ -138,11 +142,33 @@ When you run `yarn rock:run-ios` or `yarn rock:run-android`:
 build_android_cache:
   stage: build
   script:
-    - bun run build:android --variant=devDebug
-    - CACHE_DIR="$(ls -1dt .rock/cache/remote-build/rock-android-* | head -n1)"
-    - sh scripts/upload-cache-remote.sh "${CACHE_DIR}" rock-android-devDebug-{FP}.zip android
+    - |
+      bun run rock:build-android 
+
+      CACHE_DIR="$(ls -1dt .rock/cache/remote-build/${NAME_PREFIX}-* | head -n1 || true)"
+
+      if [[ -z "${CACHE_DIR}" || ! -d "${CACHE_DIR}" ]]; then
+        echo "No cache output under .rock/cache/remote-build/${NAME_PREFIX}-*"
+        exit 1
+      fi
+      echo "CACHE_DIR=${CACHE_DIR}"
+
+      FP="${CACHE_DIR##*-}"
+      echo "Fingerprint: ${FP}"
+
+      if ! compgen -G "${CACHE_DIR}"/*.apk > /dev/null; then
+        echo "No .apk found in ${CACHE_DIR}"
+        ls -la "${CACHE_DIR}" || true
+        exit 1
+      fi
+
+      FILE_UPLOAD_NAME="${NAME_PREFIX}-${FP}.zip"
+      echo "FILE_UPLOAD_NAME=${FILE_UPLOAD_NAME}"
+
+      sh scripts/upload-cache-remote.sh "${CACHE_DIR}" "${FILE_UPLOAD_NAME}" android
 ```
-> ***You can refer to the CI gitlab config in folder example***
+
+> **_You can refer to the CI gitlab config in folder example_**
 
 ## License
 
