@@ -141,6 +141,8 @@ When you run `bun rock:run-ios` or `bun rock:run-android`:
 ```yaml
 build_android_cache:
   stage: build
+  variables:
+    NAME_PREFIX: "rock-android-devDebug"
   script:
     - |
       bun run rock:build-android 

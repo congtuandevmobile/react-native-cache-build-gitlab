@@ -1,3 +1,13 @@
+## v1.1.0
+
+## General
+
+- **Major Update**: Successfully promoted `v1.1.0-beta.0` to stable channel.
+
+- Updated project metadata (Author, Keywords) to reflect correct ownership and scope.
+
+- Update the readme for more details. 
+
 ## v1.1.0-beta.0
 
 ## Improvement
