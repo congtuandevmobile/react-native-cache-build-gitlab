@@ -42,6 +42,16 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "tag=$VERSION" >> $GITHUB_OUTPUT
+          
+          if [[ "$VERSION" == *"-"* ]]; then
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+            echo "npm_tag=beta" >> $GITHUB_OUTPUT
+            echo "Detected Pre-release version: $VERSION (tag: beta)"
+          else
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+            echo "npm_tag=latest" >> $GITHUB_OUTPUT
+            echo "Detected Release version: $VERSION (tag: latest)"
+          fi
 
       # Step 5: Ensure tag doesn't already exist  
       - name: Check if tag exist
@@ -73,7 +83,7 @@ jobs:
 
       # Step 7: Publish package
       - name: Publish Bun package
-        run: bun publish --access public
+        run: bun publish --access public --tag ${{ steps.version.outputs.npm_tag }}
         env:
           NPM_AUTH_TOKEN: ${{ secrets.TUANNC2_SECRET_KEY }}
 
@@ -90,3 +100,4 @@ jobs:
           tag_name: ${{ steps.version.outputs.tag }}
           name: Release ${{ steps.version.outputs.tag }}
           body_path: release.md
+          prerelease: ${{ steps.version.outputs.is_prerelease }}

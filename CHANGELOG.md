@@ -1,3 +1,9 @@
+## v1.1.0-beta.0
+
+## Improvement
+
+- Update version to v1.1.0-beta.0
+
 ## v1.0.10
 
 ## Fix
